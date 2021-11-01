@@ -24,7 +24,7 @@ export default function RaceProvider({ children }) {
   // Store "race_summaries" and "next_to_go_ids"
   const { race_summaries: summaries, next_to_go_ids: orderedIds } = value || {};
 
-  // Create new state from manipulating stored data
+  // Create new state for manipulating stored data
   const [data, setData] = useState();
 
   // Convert race summaries to an array
@@ -34,14 +34,12 @@ export default function RaceProvider({ children }) {
     }
   }, [summaries, status]);
 
-  // Match race summaries to next to go ids order in new array
-  // and only keep first 5 items in array
+  // Match "race summaries" to "next to go ids" order in new array
   const orderedRaces = useMemo(() => {
     if (data && data.length && orderedIds && orderedIds.length) {
       return (orderedIds || [])
         .map((race) => data.find((val) => val.race_id === race))
-        .filter((i) => !!i)
-        .slice(0, 5);
+        .filter((i) => !!i);
     }
     return null;
   }, [data, orderedIds]);
@@ -58,16 +56,19 @@ export default function RaceProvider({ children }) {
     }
   }, [status, orderedRaces]);
 
-  // If a race category tab is clicked
+  // Display all races or, if a race category is defined
   // filter out races that do not match the category
+  // slice array to only 5 races
   const categoriseRaces = useCallback(
     (category) => {
-      if (!category) return orderedRaces || [];
+      if (!category) return (orderedRaces || []).slice(0, 5);
 
       let catId = "";
       if (categories[category]) catId = categories[category];
 
-      return (orderedRaces || []).filter((item) => item.category_id === catId);
+      return (orderedRaces || [])
+        .filter((item) => item.category_id === catId)
+        .slice(0, 5);
     },
     [orderedRaces]
   );

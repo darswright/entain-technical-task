@@ -8,6 +8,7 @@ export default function RaceCountdown({ raceId, startTime }) {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(startTime));
   const { days, hours, minutes, seconds } = timeLeft || {};
 
+  // Update timeLeft calculation every second
   useEffect(() => {
     const timer = setTimeout(() => {
       setTimeLeft(calculateTimeLeft(startTime));
@@ -16,6 +17,7 @@ export default function RaceCountdown({ raceId, startTime }) {
     return () => clearTimeout(timer);
   });
 
+  // Generate timer output string
   const text = useMemo(() => {
     if (!timeLeft) return "";
 
@@ -30,6 +32,8 @@ export default function RaceCountdown({ raceId, startTime }) {
     }, "");
   }, [days, hours, minutes, seconds]);
 
+  // If race countdown has finished, the race has started
+  // call removeRace() to initiate 1 minute removal timer
   useEffect(() => {
     if (!text) {
       removeRace(raceId);
