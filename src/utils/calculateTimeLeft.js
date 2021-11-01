@@ -12,7 +12,7 @@ const calculateTimeLeft = (seconds) => {
     };
   }
 
-  return { underway: "Race" };
+  return false;
 };
 
 export default calculateTimeLeft;

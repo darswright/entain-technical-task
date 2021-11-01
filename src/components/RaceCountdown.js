@@ -1,9 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useContext } from "react";
+import { RaceContext } from "../context/RaceContext";
 import calculateTimeLeft from "../utils/calculateTimeLeft";
 
-export default function RaceCountdown({ startTime }) {
+export default function RaceCountdown({ raceId, startTime }) {
+  const { removeRace } = useContext(RaceContext);
+
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(startTime));
-  console.log(timeLeft);
+  const { days, hours, minutes, seconds } = timeLeft || {};
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setTimeLeft(calculateTimeLeft(startTime));
@@ -12,15 +16,27 @@ export default function RaceCountdown({ startTime }) {
     return () => clearTimeout(timer);
   });
 
-  const timerComponents = [];
+  const text = useMemo(() => {
+    if (!timeLeft) return "";
 
-  Object.keys(timeLeft).forEach((interval) => {
-    timerComponents.push(
-      <span>
-        {timeLeft[interval]} {interval}{" "}
-      </span>
-    );
-  });
+    return Object.keys(timeLeft).reduce((agg, interval) => {
+      if (timeLeft[interval] === 0 && interval === "seconds")
+        return `${agg} ${timeLeft[interval]} ${interval} `;
 
-  return timeLeft ? timerComponents : "Race underway";
+      if (timeLeft[interval])
+        return `${agg} ${timeLeft[interval]} ${interval} `;
+
+      return agg;
+    }, "");
+  }, [days, hours, minutes, seconds]);
+
+  useEffect(() => {
+    if (!text) {
+      removeRace(raceId);
+    }
+  }, [text, raceId]);
+
+  if (!text) return "Race underway";
+
+  return text;
 }

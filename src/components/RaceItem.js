@@ -5,17 +5,25 @@ import RaceCountdown from "./RaceCountdown";
 export default function RaceItem({ race }) {
   if (!race) return null;
 
+  const {
+    race_id: id,
+    race_number: number,
+    meeting_name: meeting,
+    advertised_start: start,
+  } = race || {};
+  const { seconds } = start || {};
+
   return (
-    <ListItem key={race.race_id} borderWidth="1px" borderRadius="lg" p={2}>
-      <p>Race #{race.race_number}</p>
-      <p>Meeting Name: {race.meeting_name}</p>
+    <ListItem key={id} borderWidth="1px" borderRadius="lg" p={2}>
+      <p>Race #{number}</p>
+      <p>Meeting Name: {meeting}</p>
       <p>
-        <RaceCountdown startTime={race.advertised_start.seconds} />
+        <RaceCountdown raceId={id} startTime={seconds} />
       </p>
     </ListItem>
   );
 }
 
 RaceItem.propTypes = {
-  race: PropTypes.arrayOf(PropTypes.object).isRequired,
+  race: PropTypes.shape({}).isRequired,
 };

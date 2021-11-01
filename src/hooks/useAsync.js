@@ -1,4 +1,4 @@
-// https://usehooks.com/useAsync/
+// Adapted from https://usehooks.com/useAsync/
 
 import { useState, useCallback, useEffect } from "react";
 
@@ -27,13 +27,7 @@ const useAsync = (asyncFunction) => {
 
   useEffect(() => {
     execute();
-
-    const timer = setInterval(() => {
-      execute();
-    }, 1000 * 60);
-
-    return () => clearInterval(timer);
-  }, [execute]);
+  }, []);
 
   return { execute, status, value, error };
 };
