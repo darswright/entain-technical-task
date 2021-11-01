@@ -85,10 +85,8 @@ RacesList.propTypes = {
   error: PropTypes.shape({ message: PropTypes.string }),
   status: PropTypes.string.isRequired,
   value: PropTypes.shape({
-    data: PropTypes.shape({
-      race_summaries: PropTypes.shape({ race_id: PropTypes.string }),
-      next_to_go_ids: PropTypes.arrayOf(PropTypes.string),
-    }),
+    race_summaries: PropTypes.shape({ race_id: PropTypes.string }),
+    next_to_go_ids: PropTypes.arrayOf(PropTypes.string),
   }),
   category: PropTypes.string,
 };
